@@ -173,6 +173,10 @@ const config = {
               type: "docSidebar",
               sidebarId: "miscGuidesSidebar",
             },
+            {
+              type: "docSidebar",
+              sidebarId: "shellCommandsSidebar",
+            },
           ],
         },
         {
