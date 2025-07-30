@@ -1,0 +1,30 @@
+---
+title: gui_notes
+description: "page description"
+unlisted: true
+---
+
+## BINMAT window layout
+
+```
+a0 attacker
+d0 defender
+[any additional users]
+
+h?n [...] <- your hand **
+[additional team hands] **
+h?n [num] <- count of cards in opponent hand **
+[additional team hands] **
+xa [...] <- attacker discard **
+a X <- attacker deck **
+
+XXX [320|303] [ORD N] ------ <- XXX = turn num, N is your position for that turn,
+X   X   X   X   X   X  <- lane discard
+X   X   X   3!  4#  a+ <- lane decks (0, 1, 2, 3, 4, 5 respectively)
+X   X   X   X   X   X  <- defender stacks
+X   X   X   X   X   X  <- attacker stacks
+
+:
+```
+
+`** = line only exists when data is present`
