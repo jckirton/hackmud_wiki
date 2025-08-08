@@ -3,3 +3,154 @@ title: binlog
 description: "Deciphering the heirogliphs of what happened."
 ---
 
+
+The binlog is a terse structured format that describes the actions and results of turns in BINMAT.
+
+## Turns
+
+A simple turn looks like this:
+
+> (( %V001% %n------% )) <br/>
+> (( a0 d0 / X ha0 ))
+
+(( %V001% )) is the turn number, which starts at ((%V000%)). The following lines are each player's action, and their results.
+
+Keep in mind that defenders (`d`) go on even turns, attackers (`a`) on odd turns.
+
+If multiple players on a given role are present, their actions are presented one after another:
+
+> (( %V002% %n------% )) <br/>
+> (( d0 d0 / X hd0 )) <br/>
+> (( d1 d3 / %N9%%N%% hd1 ))
+
+## Actions
+
+Most actions, such as drawing cards, playing cards or discarding cards only produce a single log line:
+> (( a0 d5 / %D8!% ha0 ))
+
+The format of this line is always `<PLAYER> <ACTION> / <RESULTS>`
+In this case the player is `a0` (the first attacker) and the action is `d0` (draw from lane 0).
+As a result of this action, the (( %D8!% )) card was moved to `ha0` (the hand of the first attacker).
+
+Cards that aren't publicly visible are represented using `X`:
+> (( d0 d1 / X hd0 ))
+
+This reads as "`d0` drew from lane 1. As a result of this action, an unknown card was moved to `hd0`."
+
+This also applies to the action itself. If `a0` were to input the operation `p8!2` now, the resulting binlog line would look like this:
+> (( a0 pX2 / X a2 ))
+
+Here are some examples of how various actions look:
+
+### Drawing
+
+> (( a0 d5 / %D8!% ha0 ))
+
+> (( d0 d1 / X hd0 ))
+
+### Playing a card
+
+> (( a0 pX2 / X a2 ))
+
+
+### Playing a card face-up
+
+> (( d0 u%I7^%2 / %I7^% d2 ))
+
+### Discarding cards
+
+> (( d0 x%l3&%2 / %l3&% x2 ))
+
+> (( a0 x%I?^%a / %I?^% xa / X X ha0 ))
+
+Note that the two unknown cards drawn here are due to the attacker deck double-draw rule.
+
+## Combat
+
+A simple combat may look as follows:
+
+> (( a0 c2 )) <br/>
+> (( %n--% c2 / %I8^% / %q2+% )) <br/>
+> (( %n--% 3 2 2 / %I8^% xa / %q2+% xa / X ha0 )) <br/>
+
+Here's a line-by-line breakdown:
+> (( a0 c2 )) <br/>
+
+This is the action line, with a similar meaning as before: "`a0` declares combat in lane 2."
+
+> (( %n--% c2 / %I8^% / %q2+% )) <br/>
+
+This is the line that says a combat has started: "Combat in lane 2. The attacker stack is: ((%I8^%)). The defender stack is: ((%q2+%))."
+
+> (( %n--% 3 1 3 / %I8^% xa / %q2+% xa / X X ha0 )) <br/>
+
+This is the result line, fully written out, it says:<br/>
+"Attacker power: 3. Defender power: 2. Damage done: 2.<br/>
+Discard the attacker stack, ((%I8^%)), to the attacker discard.<br/>
+Deal 1 damage to the defender stack, moving (( %q2+% )) to the attacker discard.<br/>
+Deal 2 damage to the lane deck, moving two unknown cards to `ha0`."
+
+### Modifiers
+
+If trap (`@`) or bounce (`?`) modifiers are in play, their resolution adds additional lines between the start and end of the combat:
+
+> (( a0 c0 )) <br/>
+> (( %n--% c0 / %F4#% %D@!% / %q7+% %N9%%N%% )) <br/>
+> (( %n--% a@ / %N9%%N%% xa )) <br/>
+> (( %n--% 2 0 3 / %F4#% %D@!% xa / %q7+% xa / X X ha0 )) <br/>
+
+These lines are added in order of resolution, so if an attacker begins combat, `a@` appears first. If a defender begins combat, `d@` appears first.
+All traps resolve before all bounces:
+
+> (( a0 c0 )) <br/>
+> (( %n--% c0 / %q8+% %F@#% / %I?^% %F3#% )) <br/>
+> (( %n--% a@ / %F3#% xa )) <br/>
+> (( %n--% d? / %I?^% xa )) <br/>
+> (( %n--% 0 0 0 / %q8+% %F@#% xa )) <br/>
+
+### Defender Victory
+
+If the defender wins, the damage is shown as `-`:
+
+> (( a0 c0 )) <br/>
+> (( %n--% c0 / %N9%%N%% %q7+% / %q8+% %D@!% )) <br/>
+> (( %n--% d@ / %q7+% x0 )) <br/>
+> (( %n--% 0 3 - / %N9%%N%% x0 )) <br/>
+
+### Break-initiated combat
+
+If a break initiates combat, the combat log directly follows the action result:
+
+> (( a0 u%D>!%0 )) <br />
+> (( %n--% c0 / %D8!% %D>!%u / %q8+%u %D@!%u )) <br/>
+> (( %n--% 3 3 2 / %D8!% %D>!%u xa / %q8+%u %D@!%u xa )) <br/>
+
+## Scripting
+
+In a BINMAT brain script, the binlog is available in the arguments object under the key ((%Nops%)).
+The previous two turns of logs are presented as an array, with each line being a separate array element.
+(Note that at the start of the game, there may not be two turns of logs available yet.)
+
+The card names are not colored in the script binlog, but the turn number, separators, and combat resolution prefixes are.
+
+So this log:
+
+> (( %V079% %n------% )) <br/>
+> (( a0 u%D>!%0 )) <br />
+> (( %n--% c0 / %D8!% %D>!%u / %q8+%u %D@!%u )) <br/>
+> (( %n--% 3 3 2 / %D8!% %D>!%u xa / %q8+%u %D@!%u xa )) <br/>
+> (( %V080% %n------% )) <br/>
+> (( d0 d2 / X hd0 )) <br/>
+
+Appears as follows in scripts:
+
+```js
+[
+  "`V079` `n------`",
+  "a0 u>!0",
+  "`N--` c0 / 8! >!u / 8+u @!u",
+  "`n--` 3 3 2 / 8! >!u xa / 8+u @!u xa",
+  "`V080` `n------`",
+  "d0 d2 / X hd0",
+]
+```
