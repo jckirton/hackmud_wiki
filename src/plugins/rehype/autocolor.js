@@ -47,6 +47,7 @@ const regexKvp =
 // This can be changed by adding an i to the regex flags, but lowercase strings will still be converted to uppercase when colorized
 const regexGC =
   /(?=\d)(?:(\d+)Q)?(?:(\d{1,3})T)?(?:(\d{1,3})B)?(?:(\d{1,3})M)?(?:(\d{1,3})K)?(\d{1,3})?GC/g;
+  // /(?:(?=\d)(?:(\d+)Q)?(?:(\d{1,3})T)?(?:(\d{1,3})B)?(?:(\d{1,3})M)?(?:(\d{1,3})K)?(\d{1,3})?)?GC/g;
 
 function colorScript(_fullMatch, user, script) {
   const isTrustUser = trustUsers.includes(user);
