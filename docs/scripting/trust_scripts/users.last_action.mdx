@@ -27,11 +27,19 @@ users.last_action { name: "trust" }
 
 #### name (required)
 
-The '((%Nname%))' argument takes a string and specifies which user's last action shall be checked.
+((%Nname%)) takes a string or array of strings (max. 50), and specifies which users' last action shall be checked.
 
 ### Return
 
-Returns an object.
+{/* Returns an array of objects containing keys ((%Nn%)) and ((%Nt%)).
+
+((%Nn%)) is a string containing the name of the user, and ((%Nt%)) is a Date object of that user's last action.
+
+If a lookup fails due to the user not existing, `null` will replace the object for that user's entry in the array. */}
+
+Returns an array containing objects with the name of the user (((%Nn%))), and a Date of their last action (((%Nt%))).
+
+If a specified user doesn't exist, their entry in the returned array will instead be `null`.
 
 #### CLI
 
@@ -46,10 +54,12 @@ Returns an object.
 #### Script
 
 ```
-{
-  n: "trust",
-  t: "2024-01-16T21:43:11.439Z"
-}
+[
+  {
+    n: "trust",
+    t: "2024-01-16T21:43:11.439Z" // This is a Date object.
+  }
+]
 ```
 
 ## Example
