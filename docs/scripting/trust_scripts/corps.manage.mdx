@@ -34,23 +34,71 @@ The '((%Ncommand%))' key takes several values which will be returned to the scre
 - ((%Vpromote%))
 - ((%Vfire%))
 
+#### name (optional)
+
+The user to target for applicable ((%Ncommand%))s.
+
+#### confirm (optional)
+
+Confirmation for firing.
+
 ### Return
 
-Returns an object.
+Return differs based on inputted ((%Ncommand%)).
 
-#### CLI
+#### list
+
+Returns an array of objects describing corp members' names and admin status.
+
+Corp owners do not show `is_admin: true`.
+
+##### CLI
 
 ```
 >>corps.manage { command: "list" }
 {
-  name: "<user>",
+  name: "corp_admin",
+  is_admin: true
+}
+{
+  name: "basic_member",
   is_admin: false
 }
 ```
 
-#### Script
+##### Script
 
-Same as CLI.
+```
+[
+  {
+  name: "corp_admin",
+  is_admin: true
+  },
+  {
+    name: "basic_member",
+    is_admin: false
+  }
+]
+```
+
+#### promote, demote, fire
+
+Returns a script response object on valid usage. Otherwise, returns usage info.
+
+##### CLI
+
+```
+>>corps.manage {command: "<promote|demote|fire>", name: "<target user>"}
+Success
+```
+
+##### Script
+
+```
+{
+  ok: true
+}
+```
 
 ## Example
 
