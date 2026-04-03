@@ -27,23 +27,30 @@ corps.hire { name: "example_user" }
 
 #### name (required)
 
-The '((%Nname%))' argument specifies the user to be hired.
+The '((%Nname%))' argument specifies the target user.
+
+#### rescind (optional)
+
+The '((%Nrescind%))' argument specifies if a pending corp offer to the target user should be rescinded/revoked.
 
 ### Return
 
-Returns an object.
+Returns a script response object.
 
 #### CLI
 
 ```
->>corps.hire{name: "example_user"}
+>>corps.hire {name: "example_user"}
 Success
-
 ```
 
 #### Script
 
-Same as CLI.
+```
+{
+  ok: true
+}
+```
 
 ## Example
 

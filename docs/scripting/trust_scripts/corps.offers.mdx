@@ -54,12 +54,11 @@ If offers are present:
   offers: [
     "example_corp"
   ],
-  msg: "Specify a corporation to accept offer from with { accept:"
-<corporation name>" }"
+  msg: "Specify a corporation to accept offer from with { accept:"<corporation name>" }"
 }
 ```
 
-When accepted:
+When accepting an offer:
 
 ```
 corps.offers { accept: "example_corp" }
@@ -68,7 +67,34 @@ Success
 
 #### Script
 
-Same as CLI
+If no offers are present:
+
+```
+{
+  ok: true,
+  msg: "You have no open offers.",
+  current_corp: null
+}
+```
+
+If offers are present:
+
+```
+{
+  offers: [
+    "example_corp"
+  ],
+  msg: "Specify a corporation to accept offer from with { accept:"<corporation name>" }"
+}
+```
+
+When accepting an offer:
+
+```
+{
+  ok: true
+}
+```
 
 ## Example
 
