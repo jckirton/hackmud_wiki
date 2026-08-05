@@ -43,9 +43,12 @@ The '((%Nstart%))' argument offsets the start of the access logs to be displayed
 
 ### Return
 
-Returns an object.
+Returns a string, object, array of strings, or array of objects depending on the context.
+{/* Why does this script's output vary so much?? */}
 
 #### CLI
+
+When called from the CLI, returns a string:
 
 ```
 >>sys.access_log
@@ -64,49 +67,92 @@ Get a range with count:<count> and start:<offset>
 240116.1258 Lock rotation. Breach state reset.
 ```
 
-#### Script
+#### Scriptor
+
+When called as a scriptor with null or falsey input, returns an object.
 
 ```
 {
-  t: "2024-01-16T22:16:11.779Z",
-  msg: "Lock rotation. Breach state reset."
+  msg: "To filter list, add user:"<username>" or run_id:"run_id"\nGet a range with count:<count> and start:<offset>",
+  logs: [
+    "260804.0148 Lock rotation. Breach state reset.",
+    "260804.0030 Lock rotation. Breach state reset.",
+    "260803.2328 Lock rotation. Breach state reset.",
+    "260803.2226 Lock rotation. Breach state reset.",
+    "260803.2124 Lock rotation. Breach state reset.",
+    "260803.2022 Lock rotation. Breach state reset.",
+    "260803.1920 Lock rotation. Breach state reset.",
+    "260803.1818 Lock rotation. Breach state reset.",
+    "260803.1716 Lock rotation. Breach state reset.",
+    "260803.1614 Lock rotation. Breach state reset."
+  ]
 }
-{
-  t: "2024-01-16T21:14:12.241Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T20:12:13.533Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T19:10:13.539Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T18:08:11.942Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T17:06:11.892Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T16:04:11.735Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T15:02:12.372Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T14:00:15.624Z",
-  msg: "Lock rotation. Breach state reset."
-}
-{
-  t: "2024-01-16T12:58:12.237Z",
-  msg: "Lock rotation. Breach state reset."
-}
+```
+
+When called as a scriptor with arguments, returns an array of strings.
+
+```
+[
+  "260804.0148 Lock rotation. Breach state reset.",
+  "260804.0030 Lock rotation. Breach state reset.",
+  "260803.2328 Lock rotation. Breach state reset.",
+  "260803.2226 Lock rotation. Breach state reset.",
+  "260803.2124 Lock rotation. Breach state reset.",
+  "260803.2022 Lock rotation. Breach state reset.",
+  "260803.1920 Lock rotation. Breach state reset.",
+  "260803.1818 Lock rotation. Breach state reset.",
+  "260803.1716 Lock rotation. Breach state reset.",
+  "260803.1614 Lock rotation. Breach state reset."
+]
+```
+
+#### Script
+
+When called as a script, returns an array of objects.
+
+```
+[
+  {
+    t: "2024-01-16T22:16:11.779Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T21:14:12.241Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T20:12:13.533Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T19:10:13.539Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T18:08:11.942Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T17:06:11.892Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T16:04:11.735Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T15:02:12.372Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T14:00:15.624Z",
+    msg: "Lock rotation. Breach state reset."
+  },
+  {
+    t: "2024-01-16T12:58:12.237Z",
+    msg: "Lock rotation. Breach state reset."
+  }
+]
 ```
 
 ## Example

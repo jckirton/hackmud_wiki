@@ -31,7 +31,7 @@ The '((%Nconfirm%))' parameter confirms execution of ((sys.breach)).
 
 ### Return
 
-Returns an object.
+Returns a script response object, or a string with usage info when called with parameters.
 
 #### CLI
 
@@ -43,13 +43,21 @@ Usage: sys.breach { confirm: true }
 breaches sys
 ```
 
-With confirm parameter:
+With ((confirm: true)):
 
 ```
 >>sys.breach{ confirm: true }
 Success
 
 System has been breached.
+```
+
+With ((confirm: true)) on already breached system:
+
+```
+>>sys.breach {confirm:true}
+Failure
+sys currently breached
 ```
 
 On uninitialized system:
@@ -62,10 +70,36 @@ sys not initialized
 
 #### Script
 
-```
-Success
+No parameters or invalid parameters:
 
-System has been breached.
+```
+"Usage: sys.breach { confirm: true }\nbreaches sys"
+```
+
+With ((confirm: true)):
+
+```
+{
+  ok: true
+}
+```
+
+With ((confirm: true)) on already breached system:
+
+```
+{
+  ok: false,
+  msg:"sys currently breached"
+}
+```
+
+On uninitialized system:
+
+```
+{
+  ok: false,
+  msg: "sys not initialized"
+}
 ```
 
 ## Example

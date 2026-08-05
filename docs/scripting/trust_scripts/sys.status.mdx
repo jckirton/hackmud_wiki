@@ -29,7 +29,9 @@ There are no known parameters.
 
 ### Return
 
-### CLI
+Returns a string or object depending on the context.
+
+#### CLI
 
 Returns a string.
 
@@ -45,7 +47,13 @@ or
 -system is breached-
 ```
 
-### Script
+#### Script
+
+Returns an object with 3 entries:
+
+- ((%Nhardline%)) is the remaining time of an active hardline in seconds, or `0` if hardline is inactive.
+- ((%Ntutorial%)) is a string. Values are unknown.
+- ((%Nbreach%)) is a boolean representing if the caller's system is currently breached.
 
 ```
 {

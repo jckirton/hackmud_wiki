@@ -36,14 +36,20 @@ No known parameters.
 
 #### CLI
 
-On the CLI, ((scripts.quine)) returns an object.
+On the CLI, ((scripts.quine)) returns a failure object containing usage info.
+
+```
+>>scripts.quine
+Failure
+Use scripts.quine to output the source code of your script. Place the following into your script:
+return #fs.scripts.quine()
+```
 
 #### Script
 
-Called as a subscript, ((scripts.quine)) returns a string, consisting of the source code of the calling script.
+Called as a subscript, ((scripts.quine)) returns a string consisting of the source code of the calling script.
 
 ```
-:)
 function(context, args)
 {
   let smiley_face = ":)"
@@ -60,3 +66,23 @@ function(context, args)
   return [ smiley_face, #fs.scripts.quine() ]
 }
 ```
+
+When calling from CLI:
+
+```
+>>user.example
+:)
+function(context, args)
+{
+  let smiley_face = ":)"
+  return [ smiley_face, #fs.scripts.quine() ]
+}
+```
+
+Output of script:
+
+```
+[
+  ":)",
+  "function(context, args)\n{\n  let smiley_face = \":)\"\n  return [ smiley_face, #fs.scripts.quine() ]\n}"
+]

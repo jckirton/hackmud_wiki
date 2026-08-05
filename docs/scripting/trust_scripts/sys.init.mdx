@@ -20,6 +20,13 @@ sys.init { confirm: true }
 ### Script
 
 Cannot be called as a subscript.
+Causes a parse error when present in a script.
+
+```
+>>#up example
+Failure
+PARSE ERROR sys.init: script cannot be included in another script.
+```
 
 ### Parameters
 
@@ -29,7 +36,7 @@ The '((%Nconfirm%))' parameter confirms system initialization.
 
 ### Return
 
-Returns a ((%LSuccess%)) or ((%DFailure%)) object, or a string.
+Returns a script response object, or a string.
 
 #### CLI
 
@@ -69,4 +76,4 @@ Your system is fully initialized.
 
 #### Script
 
-Cannot be called as a subscript.
+Cannot be called as a subscript or scriptor.

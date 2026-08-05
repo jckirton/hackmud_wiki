@@ -35,10 +35,22 @@ The '((%Nload%))' argument takes an upgrade index as a number, or an array of nu
 
 #### reorder
 
-The '((%Nreorder%))' argument takes reorder pairs as objects, or arrays.
+The '((%Nreorder%))' argument takes operations in the following ways:
+
+- A single object
+  - `{from: <x>, to: <y>}`
+- An array of objects
+  - `[ {from: <x>, to: <y>}, {from: <x2>, to: <y2>}, ... ]`
+- An array of two item arrays
+  - `[ [ <x>, <y> ], [ <x2>, <y2> ], ... ]`
+
 
 ```
 sys.manage { reorder: { from: 0, to: 1 } }
+```
+
+```
+sys.manage { reorder: [ {from: 0, to: 1}, {from: 2, to: 3}] }
 ```
 
 ```
@@ -47,9 +59,32 @@ sys.manage { reorder: [ [ 0, 1 ], [ 2, 3 ] ] }
 
 ### Return
 
-Returns an object.
+Returns a script response object, a string, or an array of strings depending on the input.
+
+- When called with null, empty or falsey arguments, returns a string with usage info.
+- When invalid parameters are given, returns a script failure object that states the issue.
+- On a successful ((%Nreorder%)), returns an array of strings containing a list of upgrades, similar to CLI [[sys.upgrades:((sys.upgrades))]] output.
+- On a successful ((%Nload%))/((%Nunload%)), returns a script success with no message.
 
 #### CLI
+
+Empty arguments:
+
+```
+>>sys.manage
+Usage: sys.manage { unload:<upgrade index or array>, load:<upgrade index or array>, reorder:<swap pair or array> }
+```
+
+Successful load and/or unload:
+
+```
+>>sys.manage { load: 0 }
+Success
+
+-channel_count_v3- loaded
+```
+
+Successful reorder:
 
 ```
 >>sys.manage { reorder: { from: 0, to: 1 } }
@@ -57,9 +92,53 @@ Returns an object.
 001 tier_3 chat         channel_count_v3
 ```
 
+Invalid parameters:
+
+```
+>>sys.manage { load: 1000 }
+Failure
+invalid index.
+```
+
 #### Script
 
-Same as CLI.
+Empty arguments:
+
+```
+"Usage: sys.manage { unload:<upgrade index or array>, load:<upgrade index or array>, reorder:<swap pair or array> }"
+```
+
+Successful load and/or unload:
+
+```
+#ms.sys.manage({ load: 0 })
+
+{
+  ok: true
+}
+```
+
+Successful reorder:
+
+```
+#ms.sys.manage({ reorder: { from: 0, to: 1 } })
+
+[
+  "000 tier_3 script_space char_count_v3",
+  "001 tier_3 chat         channel_count_v3"
+]
+```
+
+Invalid parameters:
+
+```
+#ms.sys.manage({ load: 1000 })
+
+{
+  ok: false,
+  msg: "invalid index."
+}
+```
 
 ## Example
 

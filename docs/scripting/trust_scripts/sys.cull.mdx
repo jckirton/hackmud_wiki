@@ -18,13 +18,13 @@ Index values are input as a number, or array of numbers with no leading 0s.
 Single upgrade:
 
 ```
-sys.cull { i: 0 }
+>>sys.cull { i: 0, confirm: true }
 ```
 
 Multiple upgrades:
 
 ```
-sys.cull { i: [ 0, 1, 2 ], confirm: true }
+>>sys.cull { i: [ 0, 1, 2 ], confirm: true }
 ```
 
 ### Script
@@ -39,13 +39,17 @@ sys.cull { i: [ 0, 1, 2 ], confirm: true }
 
 The '((%Ni%))' parameter specifies the upgrade(s) to be culled.
 
+#### confirm
+
+The '((%Nconfirm%))' parameter confirms execution of ((sys.cull)).
+
 ### Return
 
-Returns an object.
+Returns a script response object or string.
 
 #### CLI
 
-No parameters or invalid parameters
+No parameters:
 
 ```
 >>sys.cull
@@ -53,10 +57,25 @@ Usage: sys.cull { i:<upgrade index or array> }
 destroys upgrade at i
 ```
 
+Invalid parameters:
+
+```
+>>sys.cull { i: 1000 }
+Failure
+invalid index
+```
+
+Valid ((%Ni%)) but falsey ((%Nconfirm%)):
+
+```
+>>sys.cull { i: 244 }
+Confirm destruction of expose_access_log_v1 with confirm:true
+```
+
 Correct parameters:
 
 ```
->>sys.cull { i:244, confirm: true }
+>>sys.cull { i: 244, confirm: true }
 Success
 
 -expose_access_log_v1- destroyed
@@ -65,6 +84,43 @@ Success
 #### Script
 
 Same as CLI.
+
+No parameters:
+
+```
+#ls.sys.cull()
+
+"Usage: sys.cull { i:<upgrade index or array> }\ndestroys upgrade at i"
+```
+
+Invalid parameters:
+
+```
+#ls.sys.cull({ i: 1000 })
+
+{
+  ok: false,
+  msg: "invalid index"
+}
+```
+
+Valid ((%Ni%)) but falsey ((%Nconfirm%)):
+
+```
+#ls.sys.cull({ i: 244 })
+
+"Confirm destruction of expose_access_log_v1 with confirm:true"
+```
+
+Correct parameters:
+
+```
+#ls.sys.cull({ i: 244, confirm: true })
+
+{
+  ok: true
+}
+```
 
 ## Example
 
