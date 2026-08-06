@@ -48,13 +48,29 @@ Returns a string, object, array of strings, or array of objects depending on the
 
 #### CLI
 
-When called from the CLI, returns a string:
+When called from the CLI with no arguments, returns a string:
 
 ```
 >>sys.access_log
 To filter list, add user:"<username>" or run_id:"run_id"
 Get a range with count:<count> and start:<offset>
 
+240116.2216 Lock rotation. Breach state reset.
+240116.2114 Lock rotation. Breach state reset.
+240116.2012 Lock rotation. Breach state reset.
+240116.1910 Lock rotation. Breach state reset.
+240116.1808 Lock rotation. Breach state reset.
+240116.1706 Lock rotation. Breach state reset.
+240116.1604 Lock rotation. Breach state reset.
+240116.1502 Lock rotation. Breach state reset.
+240116.1400 Lock rotation. Breach state reset.
+240116.1258 Lock rotation. Breach state reset.
+```
+
+When called from the CLI with any arguments, returns an array of strings:
+
+```
+>>sys.access_log literally anything
 240116.2216 Lock rotation. Breach state reset.
 240116.2114 Lock rotation. Breach state reset.
 240116.2012 Lock rotation. Breach state reset.
@@ -89,7 +105,7 @@ When called as a scriptor with null or falsey input, returns an object.
 }
 ```
 
-When called as a scriptor with arguments, returns an array of strings.
+When called as a scriptor with non-falsey input, returns an array of strings.
 
 ```
 [
@@ -108,7 +124,7 @@ When called as a scriptor with arguments, returns an array of strings.
 
 #### Script
 
-When called as a script, returns an array of objects.
+When called as a subscript, returns an array of objects.
 
 ```
 [
