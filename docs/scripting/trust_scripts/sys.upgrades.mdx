@@ -27,7 +27,7 @@ sys.upgrades
 
 #### filter
 
-The '((%Nfilter%))' parameter takes an object which can specify properties of the upgrade(s). Can take discrete values or MongoDB compatible queries, e.g. `chars: { "$gte" : 2000 }`
+The '((%Nfilter%))' parameter takes an object which can specify properties of the upgrade(s). Can take discrete values or some MongoDB compatible queries, e.g. `chars: { "$gte" : 2000 }`
 
 #### full
 
@@ -45,11 +45,12 @@ If it is ((%Vfalse%)), it returns the same output as if the script was called fr
 
 ### Return
 
-Returns an object.
+Returns a string, object, array of strings, or array of objects depending on the context and arguments.
+{/* The first of these I knew about. Annoying thing. */}
 
 #### CLI
 
-No parameters or invalid parameters:
+When called from the CLI with null or invalid arguments, returns a string:
 
 ```
 >>sys.upgrades
@@ -63,40 +64,316 @@ i:<index or array> to pre-filter on index(es)
 003 tier_3 script_space script_slot_v3
 ```
 
-#### Script
+When called from the CLI with valid arguments (except ((full: true)) and integer ((%Ni%))), returns an array of strings:
 
 ```
+>>sys.upgrades { filter: { } } // filter: null also does the same, and any valid filter of course.
+000 tier_3 chat         channel_count_v3
+001 tier_3 script_space char_count_v3
+002 tier_3 script_space public_script_v3
+003 tier_3 script_space script_slot_v3
+```
+
+When called from the CLI with ((full: true)) (except for when integer ((%Ni%)) is present), returns an array of objects:
+
+```
+>>sys.upgrades { full: true }
+[
+  {
+    rarity: "h4x0r",
+    name: "channel_count_v3",
+    type: "chat"
+    up_class: "executive",
+    tier: 3,
+    loaded: false,
+    count: 4,
+    sn: "68bd37cd1be6dd06d47edf78",
+    description: "channel_count allows you to connect to more chat channels.",
+    i: 0,
+  },
+  {
+    rarity: "kiddie",
+    name: "char_count_v3",
+    type: "script_space"
+    up_class: "architect",
+    tier: 3,
+    loaded: true,
+    chars: 1400,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "char_count adds space for additional characters in every script.",
+    i: 1,
+  },
+  {
+    rarity: "kiddie",
+    name: "public_script_v3",
+    type: "script_space"
+    up_class: "architect",
+    tier: 3,
+    loaded: true,
+    slots: 2,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "public_script_slot allows you to mark scripts as public.",
+    i: 2,
+  },
+  {
+    rarity: "kiddie",
+    name: "script_slot_v3",
+    type: "script_space",
+    up_class: "architect",
+    tier: 3,
+    loaded: true,
+    slots: 2,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "script_slot allows you to increase your script slots.",
+    i: 3,
+  }
+]
+```
+
+When called from the CLI with integer ((%Ni%)), returns an object:
+
+```
+>>sys.upgrades { i: 0 }
 {
-  i: 0,
-  loaded: true,
+  rarity: "h4x0r",
+  name: "channel_count_v3",
+  type: "chat"
+  up_class: "executive",
   tier: 3,
+  loaded: false,
+  count: 4,
+  sn: "68bd37cd1be6dd06d47edf78",
+  description: "channel_count allows you to connect to more chat channels.",
+  i: 0,
+}
+```
+
+#### Scriptor
+
+When called as a scriptor with null input or invalid arguments, returns an object:
+
+```
+args.sys_upgrades.call()
+{
+  msg: "To filter list, add filter:<filter object>; e.g. filter:{loaded:true, chars:{"$gte":2000}}\nfull:true for upgrade details\ni:<index or array> to pre-filter on index(es)",
+  upgrades: [
+  "000 tier_3 chat         channel_count_v3",
+  "001 tier_3 script_space char_count_v3",
+  "002 tier_3 script_space public_script_v3",
+  "003 tier_3 script_space script_slot_v3"
+  ]
+}
+```
+
+When called as a scriptor with valid arguments (except ((full: true)) and integer ((%Ni%))), returns an array of strings:
+
+```
+args.sys_upgrades.call({ filter: null }) // filter: {} also does the same, and array i as well.
+
+[
+  "000 tier_3 chat         channel_count_v3",
+  "001 tier_3 script_space char_count_v3",
+  "002 tier_3 script_space public_script_v3",
+  "003 tier_3 script_space script_slot_v3"
+]
+```
+
+When as a scriptor with ((full: true)) (except for when integer ((%Ni%)) is present), returns an array of objects:
+
+```
+args.sys_upgrades.call({ full: true }) // also works with array i as you expect
+
+[
+  {
+    rarity: "h4x0r",
+    name: "channel_count_v3",
+    type: "chat"
+    up_class: "executive",
+    tier: 3,
+    loaded: false,
+    count: 4,
+    sn: "68bd37cd1be6dd06d47edf78",
+    description: "channel_count allows you to connect to more chat channels.",
+    i: 0,
+  },
+  {
+    rarity: "kiddie",
+    name: "char_count_v3",
+    type: "script_space"
+    up_class: "architect",
+    tier: 3,
+    loaded: true,
+    chars: 1400,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "char_count adds space for additional characters in every script.",
+    i: 1,
+  },
+  {
+    rarity: "kiddie",
+    name: "public_script_v3",
+    type: "script_space"
+    up_class: "architect",
+    tier: 3,
+    loaded: true,
+    slots: 2,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "public_script_slot allows you to mark scripts as public.",
+    i: 2,
+  },
+  {
+    rarity: "kiddie",
+    name: "script_slot_v3",
+    type: "script_space",
+    up_class: "architect",
+    tier: 3,
+    loaded: true,
+    slots: 2,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "script_slot allows you to increase your script slots.",
+    i: 3,
+  }
+]
+```
+
+When called as a scriptor with integer ((%Ni%)), returns an object:
+
+```
+args.sys_upgrades.call({ i: 0 })
+
+{
+  rarity: "h4x0r",
+  name: "channel_count_v3",
+  type: "chat"
+  up_class: "executive",
+  tier: 3,
+  loaded: false,
+  count: 4,
+  sn: "68bd37cd1be6dd06d47edf78",
+  description: "channel_count allows you to connect to more chat channels.",
+  i: 0,
+}
+```
+
+#### Script
+
+When called as a subscript with anything except integer ((%Ni%)), returns an array of objects.
+
+The information contained in the objects depends on the presence of ((full:true)).
+
+No ((full: true)):
+
+```
+#hs.sys.upgrades()
+
+[
+  {
+    i: 0,
+    loaded: true,
+    tier: 3,
+    rarity: 2,
+    name: "channel_count_v3",
+    type: "chat"
+  },
+  {
+    i: 1,
+    loaded: true,
+    tier: 3,
+    rarity: 1,
+    name: "char_count_v3",
+    type: "script_space"
+  },
+  {
+    i: 2,
+    loaded: true,
+    tier: 3,
+    rarity: 1,
+    name: "public_script_v3",
+    type: "script_space"
+  },
+  {
+    i: 3,
+    loaded: true,
+    tier: 3,
+    rarity: 1,
+    name: "script_slot_v3",
+    type: "script_space"
+  }
+]
+```
+
+With ((full: true)):
+
+```
+#hs.sys.upgrades()
+
+[
+  {
+    rarity: 2,
+    name: "channel_count_v3",
+    type: "chat"
+    up_class: 3,
+    tier: 3,
+    loaded: false,
+    count: 4,
+    sn: "68bd37cd1be6dd06d47edf78",
+    description: "channel_count allows you to connect to more chat channels.",
+    i: 0,
+  },
+  {
+    rarity: 1,
+    name: "char_count_v3",
+    type: "script_space"
+    up_class: 0,
+    tier: 3,
+    loaded: true,
+    chars: 1400,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "char_count adds space for additional characters in every script.",
+    i: 1,
+  },
+  {
+    rarity: 1,
+    name: "public_script_v3",
+    type: "script_space"
+    up_class: 0,
+    tier: 3,
+    loaded: true,
+    slots: 2,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "public_script_slot allows you to mark scripts as public.",
+    i: 2,
+  },
+  {
+    rarity: 1,
+    name: "script_slot_v3",
+    type: "script_space",
+    up_class: 0,
+    tier: 3,
+    loaded: true,
+    slots: 2,
+    sn: "687bab7e1be6dd49400928e6",
+    description: "script_slot allows you to increase your script slots.",
+    i: 3,
+  }
+]
+```
+
+When called as a subcript with integer ((%Ni%)), returns an object:
+
+```
+#hs.sys.upgrades({ i: 0 })
+
+{
   rarity: 2,
   name: "channel_count_v3",
   type: "chat"
-}
-{
-  i: 1,
-  loaded: true,
+  up_class: 3,
   tier: 3,
-  rarity: 1,
-  name: "char_count_v3",
-  type: "script_space"
-}
-{
-  i: 2,
-  loaded: true,
-  tier: 3,
-  rarity: 1,
-  name: "public_script_v3",
-  type: "script_space"
-}
-{
-  i: 3,
-  loaded: true,
-  tier: 3,
-  rarity: 1,
-  name: "script_slot_v3",
-  type: "script_space"
+  loaded: false,
+  count: 4,
+  sn: "68bd37cd1be6dd06d47edf78",
+  description: "channel_count allows you to connect to more chat channels.",
+  i: 0,
 }
 ```
 
