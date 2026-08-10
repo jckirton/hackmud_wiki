@@ -167,7 +167,7 @@ args.sys_upgrades.call()
 When called as a scriptor with valid arguments (except ((full: true)) and integer ((%Ni%))), returns an array of strings:
 
 ```
-args.sys_upgrades.call({ filter: null }) // filter: {} also does the same, and array i as well.
+args.sys_upgrades.call({ filter: null }) // filter: {} also does the same
 
 [
   "000 tier_3 chat         channel_count_v3",
@@ -177,7 +177,7 @@ args.sys_upgrades.call({ filter: null }) // filter: {} also does the same, and a
 ]
 ```
 
-When as a scriptor with ((full: true)) (except for when integer ((%Ni%)) is present), returns an array of objects:
+When called as a scriptor with ((full: true)) (except for when integer ((%Ni%)) is present), returns an array of objects:
 
 ```
 args.sys_upgrades.call({ full: true }) // also works with array i as you expect
